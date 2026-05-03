@@ -1,0 +1,8 @@
+{
+    "credits": 1700,
+    "hp_level": 2,
+    "fire_rate_level": 1,
+    "unlocked_abilities": [
+        "dash"
+    ]
+}
