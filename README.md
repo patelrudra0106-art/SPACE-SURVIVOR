@@ -104,7 +104,6 @@ space-shooting/
 | **Aiming** | `Mouse` | Automatic (Joystick Dir) |
 | **Primary Fire** | `Left Click` | "FIRE" Button |
 | **Dash** | `Space` | "DASH" Button |
-| **Ultimate** | `E` | "ULT" Button |
 | **Pause** | `P` / `ESC` | System Back / Menu |
 
 ---
