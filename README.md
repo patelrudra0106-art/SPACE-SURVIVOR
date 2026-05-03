@@ -138,9 +138,6 @@ The game is now fully playable on mobile and touch devices!
 
 ## ❓ FAQ
 
-**Q: How do I unlock the Ultimate Beam?**
-A: Collect credits during runs and purchase the "Ultimate Core" in the Shop menu.
-
 **Q: Is there mobile/touch support?**
 A: **Yes!** The game now features on-screen virtual controls. You can move with the joystick and use dedicated buttons for shooting and abilities.
 
