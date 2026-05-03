@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/readme/menu_screenshot.png" alt="Space Survivor Game Menu" width="100%">
+  <img src="assets/images/readme/menu_screenshot.png.png" alt="Space Survivor Game Menu" width="100%">
 </p>
 
 # 🌌 Space Survivor
