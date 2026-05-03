@@ -35,7 +35,7 @@
 ### 📈 Dynamic Difficulty Scaling (DDS)
 Unlike standard shooters, Space Survivor's intensity is governed by a real-time difficulty engine. It monitors your performance metrics—including combat accuracy, survival time, and health-to-damage ratios—to adjust enemy spawn rates and stats.
 
-### 🕹️ The "15/10" Game Feel
+### 🕹️ The Game Feel
 We prioritize tactile feedback and visual "juice":
 *   **Hit-Stop & Screen-Shake**: Frame-perfect hit-pauses and procedural shake for maximum impact.
 *   **Cinematics**: Dynamic time-scaling and camera zoom during epic moments.
@@ -49,12 +49,6 @@ We prioritize tactile feedback and visual "juice":
 As you destroy enemies, you collect **XP Gems**. Filling your XP bar triggers a **Level Up**, letting you choose from randomized tactical upgrades:
 *   **Offense**: Triple Shot, Homing Missiles, Chain Lightning (Bolt Power).
 *   **Defense**: Energy Shields, Max Health Boosts, Health Regeneration.
-
-### Meta-Progression (The Shop)
-Credits earned during missions can be spent in the Shop for permanent upgrades:
-*   **Hull Integrity**: Permanent increases to your starting health.
-*   **Fire Rate**: Meta-upgrades to your weapon's cooldown.
-*   **Special Abilities**: Unlock the **Dash** and **Ultimate Beam** for future runs.
 
 ---
 
