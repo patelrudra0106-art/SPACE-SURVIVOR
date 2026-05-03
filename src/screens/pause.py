@@ -57,9 +57,10 @@ class Pause(BaseOverlay):
         texts = self.game.power_up_manager.power_up_texts
         if texts:
             self.draw_info_line("── ACTIVE POWER-UPS ──", px, py + 108, CYAN_GLOW)
-            for i, (key, info) in enumerate(texts.items()):
-                label = info["label"]
-                color = info["color"]
+            for i, (key, data) in enumerate(texts.items()):
+                info = data.get("info", data)
+                label = info.get("label", "Power Up")
+                color = info.get("color", (255, 255, 255))
                 # Show timer if timed
                 for eff in self.game.power_up_manager.active_effects:
                     if type(eff["power_up"]).__name__ == key:

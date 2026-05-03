@@ -24,6 +24,7 @@ from src.lib.object_pool import ObjectPool
 from src.lib.analytics import Analytics
 from src.lib.meta_progression import MetaProgression
 import random
+import math
 
 
 class Game:
@@ -483,7 +484,7 @@ class Game:
             
         intensity = (0.5 - hp_pct) * 2.0 # 0 to 1
         pulse = (math.sin(pygame.time.get_ticks() / 200.0) + 1) / 2
-        alpha = int(intensity * 100 * pulse)
+        alpha = max(0, min(255, int(intensity * 100 * pulse)))
         
         # Create vignette surface
         vig = pygame.Surface((self.game_width, self.game_height), pygame.SRCALPHA)

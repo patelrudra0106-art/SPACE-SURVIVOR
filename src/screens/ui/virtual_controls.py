@@ -1,5 +1,6 @@
 import pygame
 import math
+import sys
 
 class VirtualControls:
     def __init__(self, game):
@@ -7,6 +8,8 @@ class VirtualControls:
         self.screen = game.screen
         self.width = game.game_width
         self.height = game.game_height
+        
+        self.is_mobile = sys.platform in ["android", "ios"]
         
         # Joystick settings
         self.joy_base_pos = (120, self.height - 120)
@@ -26,6 +29,7 @@ class VirtualControls:
         }
         
     def update(self):
+        if not self.is_mobile: return
         if self.game.state.name != "PLAYING":
             self.joy_active = False
             for btn in self.buttons.values(): btn["active"] = False
@@ -76,6 +80,7 @@ class VirtualControls:
                 self.game.player.abilities["ultimate"].activate()
 
     def draw(self, surface):
+        if not self.is_mobile: return
         if self.game.state.name != "PLAYING":
             return
             

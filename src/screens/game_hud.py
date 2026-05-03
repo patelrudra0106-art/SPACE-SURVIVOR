@@ -114,55 +114,96 @@ class GameHUD:
         surface.blit(label, (x + width // 2 - label.get_width() // 2, y + height + 5))
 
     def _draw_radar(self, surface):
-        """Draw a mini-radar in the bottom right corner."""
-        radius = 70
-        margin = 20
+        """Draw an advanced holographic mini-radar in the bottom right corner."""
+        radius = 80
+        margin = 25
         cx = self.game.game_width - radius - margin
         cy = self.game.game_height - radius - margin
         
-        # Radar Base
-        pygame.draw.circle(surface, (0, 30, 20, 180), (cx, cy), radius) # Transparent dark green
-        pygame.draw.circle(surface, (0, 255, 100, 100), (cx, cy), radius, 2) # Outer ring
-        pygame.draw.circle(surface, (0, 255, 100, 50), (cx, cy), radius // 2, 1) # Inner ring
+        # Create a dedicated surface for the radar to handle alpha properly
+        radar_surf = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+        rcx, rcy = radius, radius
         
-        # Crosshairs
-        pygame.draw.line(surface, (0, 255, 100, 50), (cx - radius, cy), (cx + radius, cy))
-        pygame.draw.line(surface, (0, 255, 100, 50), (cx, cy - radius), (cx, cy + radius))
+        # Radar Base (Glassmorphism / Holographic)
+        pygame.draw.circle(radar_surf, (5, 15, 25, 200), (rcx, rcy), radius) # Dark techy blue
+        pygame.draw.circle(radar_surf, (0, 200, 255, 120), (rcx, rcy), radius, 2) # Outer glowing ring
+        pygame.draw.circle(radar_surf, (0, 200, 255, 40), (rcx, rcy), radius // 2, 1) # Inner ring
+        pygame.draw.circle(radar_surf, (0, 200, 255, 20), (rcx, rcy), radius * 3 // 4, 1) # Additional ring
+        
+        # Grid lines (Crosshairs)
+        pygame.draw.line(radar_surf, (0, 200, 255, 60), (rcx - radius, rcy), (rcx + radius, rcy))
+        pygame.draw.line(radar_surf, (0, 200, 255, 60), (rcx, rcy - radius), (rcx, rcy + radius))
         
         # Scanning sweep (aesthetic)
-        sweep_angle = (pygame.time.get_ticks() / 5.0) % 360
-        sweep_x = cx + math.cos(math.radians(sweep_angle)) * radius
-        sweep_y = cy + math.sin(math.radians(sweep_angle)) * radius
-        pygame.draw.line(surface, (0, 255, 100, 80), (cx, cy), (sweep_x, sweep_y), 2)
+        sweep_angle_deg = (pygame.time.get_ticks() / 8.0) % 360
+        sweep_angle_rad = math.radians(sweep_angle_deg)
+        
+        # Draw sweep cone
+        sweep_surf = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+        points = [(rcx, rcy)]
+        for a in range(int(sweep_angle_deg) - 45, int(sweep_angle_deg)):
+            rad = math.radians(a)
+            points.append((rcx + math.cos(rad) * radius, rcy + math.sin(rad) * radius))
+        points.append((rcx + math.cos(sweep_angle_rad) * radius, rcy + math.sin(sweep_angle_rad) * radius))
+        if len(points) > 2:
+            pygame.draw.polygon(sweep_surf, (0, 255, 200, 15), points)
+        radar_surf.blit(sweep_surf, (0, 0))
+        
+        # Leading edge of the sweep
+        sweep_x = rcx + math.cos(sweep_angle_rad) * radius
+        sweep_y = rcy + math.sin(sweep_angle_rad) * radius
+        pygame.draw.line(radar_surf, (0, 255, 200, 180), (rcx, rcy), (sweep_x, sweep_y), 2)
 
         # Draw entities on radar
-        # Scale: Game world to radar
-        view_dist = 800 # How far the radar "sees"
-        
+        view_dist = 1000 # How far the radar "sees"
         player = self.game.player
         
+        def draw_blip(world_x, world_y, color, size, is_boss=False):
+            dx = world_x - player.cx
+            dy = world_y - player.cy
+            dist = math.hypot(dx, dy)
+            if dist < view_dist:
+                # Calculate angle to blip
+                blip_angle = math.degrees(math.atan2(dy, dx)) % 360
+                
+                # Check distance from sweep (fade effect)
+                angle_diff = (sweep_angle_deg - blip_angle) % 360
+                alpha = 255
+                if angle_diff < 180:  # Recently swept
+                    alpha = max(50, 255 - int((angle_diff / 180.0) * 205))
+                else:
+                    alpha = 50 # Base visibility
+                
+                blip_color = (*color[:3], alpha)
+                rx = rcx + (dx / view_dist) * radius
+                ry = rcy + (dy / view_dist) * radius
+                
+                # Bosses blip larger and pulse
+                if is_boss:
+                    pulse = (math.sin(pygame.time.get_ticks() / 150.0) + 1) / 2
+                    boss_size = size + pulse * 3
+                    pygame.draw.circle(radar_surf, blip_color, (int(rx), int(ry)), int(boss_size))
+                    pygame.draw.circle(radar_surf, (255, 255, 255, alpha), (int(rx), int(ry)), int(boss_size//2))
+                else:
+                    pygame.draw.circle(radar_surf, blip_color, (int(rx), int(ry)), size)
+
         # 1. Enemies (Red)
         for enemy in self.game.enemies:
-            dx = enemy.cx - player.cx
-            dy = enemy.cy - player.cy
-            dist = math.hypot(dx, dy)
-            if dist < view_dist:
-                rx = cx + (dx / view_dist) * radius
-                ry = cy + (dy / view_dist) * radius
-                pygame.draw.circle(surface, RED_BRITE, (int(rx), int(ry)), 2)
+            is_boss = enemy.__class__.__name__ == "BossEnemy"
+            color = (255, 50, 50) if not is_boss else (255, 0, 0)
+            size = 2 if not is_boss else 5
+            draw_blip(enemy.cx, enemy.cy, color, size, is_boss=is_boss)
         
-        # 2. Powerups (Yellow)
+        # 2. Powerups (Yellow/Gold)
         for pu in self.game.power_up_manager.power_ups:
-            dx = pu.x - player.cx
-            dy = pu.y - player.cy
-            dist = math.hypot(dx, dy)
-            if dist < view_dist:
-                rx = cx + (dx / view_dist) * radius
-                ry = cy + (dy / view_dist) * radius
-                pygame.draw.circle(surface, YELLOW, (int(rx), int(ry)), 2)
+            draw_blip(pu.x, pu.y, (255, 215, 0), 2)
                 
-        # 3. Player (Center green dot)
-        pygame.draw.circle(surface, GREEN_BRITE, (cx, cy), 3)
+        # 3. Player (Center cyan dot)
+        pygame.draw.circle(radar_surf, (0, 255, 255), (rcx, rcy), 3)
+        pygame.draw.circle(radar_surf, (255, 255, 255), (rcx, rcy), 1)
+
+        # Draw radar surface to main screen
+        surface.blit(radar_surf, (cx - radius, cy - radius))
 
     # ── Difficulty (top center) ──────────────────────────────────────────────
 

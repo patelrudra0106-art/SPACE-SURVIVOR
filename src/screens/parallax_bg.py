@@ -51,7 +51,15 @@ class ParallaxBackground:
                 tinted = img.copy()
                 # Create a tint surface
                 tint_surf = pygame.Surface(tinted.get_size(), pygame.SRCALPHA)
-                tint_surf.fill((*tint, 100)) # Alpha 100 for subtle tint
+                
+                # To make the tint subtle, we mix it with white (255, 255, 255)
+                intensity = 0.5 # 50% tint strength
+                r = int(255 - (255 - tint[0]) * intensity)
+                g = int(255 - (255 - tint[1]) * intensity)
+                b = int(255 - (255 - tint[2]) * intensity)
+                
+                # Alpha MUST be 255 here, otherwise BLEND_RGBA_MULT makes the whole layer transparent
+                tint_surf.fill((r, g, b, 255))
                 tinted.blit(tint_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
                 self.layers.append(tinted)
             else:
