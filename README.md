@@ -113,7 +113,7 @@ space-shooting/
 1.  **Requirements**: Python 3.10+ and Pygame 2.0+.
 2.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/space-survivor.git
+    git clone https://github.com/patelrudra0106-art/space-survivor.git
     cd space-survivor
     ```
 3.  **Install Dependencies**:
