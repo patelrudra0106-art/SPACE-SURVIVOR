@@ -1,7 +1,7 @@
 [project]
 name = "bullet-hell"
 version = "0.1.0"
-description = "Add your description here"
+description = "A high-performance, roguelike space shooter built with Python and Pygame, featuring dynamic difficulty scaling, meta-progression, and an event-driven modular architecture"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
