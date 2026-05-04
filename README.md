@@ -150,5 +150,5 @@ Contributions are what make the open-source community an amazing place to learn,
 <p align="center">
   <img src="assets/images/player/player(1).png" width="60"><br>
   <i>Developed with authentic game assets and passion for performance.</i><br>
-  <b>MIT License © 2026 Space Survivor Team</b>
+  <b>MIT License © 2026 Space Survivor</b>
 </p>
